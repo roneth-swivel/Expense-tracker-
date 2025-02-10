@@ -1,0 +1,148 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Expense Tracker API",
+      "description": "API for managing expenses.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/api/expenses": {
+        "get": {
+          "summary": "Get all expenses",
+          "operationId": "getAllExpenses",
+          "responses": {
+            "200": {
+              "description": "List of expenses",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Expense"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new expense",
+          "operationId": "createExpense",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Expense"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Expense created successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      },
+      "/api/expenses/{id}": {
+        "put": {
+          "summary": "Update an expense",
+          "operationId": "updateExpense",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "Expense ID",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Expense"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Expense updated successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete an expense",
+          "operationId": "deleteExpense",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "Expense ID",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Expense deleted successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Expense": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of the expense"
+            },
+            "amount": {
+              "type": "number",
+              "description": "Amount of the expense"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "Date of the expense"
+            },
+            "category": {
+              "type": "string",
+              "description": "Category of the expense"
+            }
+          },
+          "required": ["title", "amount", "date", "category"]
+        }
+      }
+    }
+  }
+  
