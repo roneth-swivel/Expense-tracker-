@@ -2,40 +2,35 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocs = require("./swagger.json"); 
+const swaggerDocs = require("./swagger.json");
 
-// Load environment variables
 dotenv.config();
 
-// Import routes and db connection function
 const connectDB = require("./config/db");
 const expenseRoutes = require("./routes/expenseRoutes");
+const authRoutes = require("./routes/authRoutes");
+const authenticateToken = require("./middleware/auth");
 
-// Initialize the app
 const app = express();
 
-// Middleware
-app.use(express.json()); // Parse incoming JSON requests
-app.use(cors()); // Enable CORS
+app.use(express.json());
+app.use(cors());
 
-// Swagger UI Route (ensure it's added correctly)
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Routes
-app.use("/api/expenses", expenseRoutes);
+// Public routes
+app.use("/api/auth", authRoutes);
 
-// Default route
+// Protected routes
+app.use("/api/expenses", authenticateToken, expenseRoutes);
+
 app.get("/", (req, res) => {
   res.send("Welcome to the Expense Tracker API!");
 });
 
-// Connect to MongoDB
 const PORT = process.env.PORT || 5000;
-
-// Connect to the database
 connectDB();
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
